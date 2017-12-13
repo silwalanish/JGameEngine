@@ -55,14 +55,14 @@ public class MasterRenderer {
 		shader.start();
 		shader.setLight(light);
 		shader.setViewMatrix(camera);
-		shader.setFog(0.001f, 1.5f, skyColor);
+		shader.setFog(0.000f, 1.5f, skyColor);
 		renderer.render(entities);
 		shader.stop();
 		
 		terrainShader.start();
 		terrainShader.setLight(light);
 		terrainShader.setViewMatrix(camera);
-		terrainShader.setFog(0.001f, 1.5f, skyColor);
+		terrainShader.setFog(0.000f, 1.5f, skyColor);
 		terrainRenderer.render(terrains);
 		terrainShader.stop();
 		

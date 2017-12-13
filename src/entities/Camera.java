@@ -19,7 +19,7 @@ public class Camera {
 	private Vector3f rotation;
 	private Player player;
 	
-	private float distanceFromPlayer = 40;
+	private float distanceFromPlayer = 200;
 	private float angleAroundPlayer = 180;
 
 	public Camera(float fov, float near_plane, float far_plane, Vector3f position, Vector3f rotation) {
@@ -36,19 +36,22 @@ public class Camera {
 	}
 	
 	public void move(){
-		calculateZoom();
-		calculatePitch();
-		calculateAroundPlayer();
-		float yOffset = distanceFromPlayer * (float) Math.sin(Math.toRadians(rotation.x));
-		float hOffset = distanceFromPlayer * (float) Math.cos(Math.toRadians(rotation.x));
-		float theta = angleAroundPlayer + player.getRotation().y;
-		float xOffset = hOffset * (float) Math.sin(Math.toRadians(theta));
-		float zOffset = hOffset * (float) Math.cos(Math.toRadians(theta));
-		rotation.y = 180 - theta;
-				
-		position.x = player.getPosition().x - xOffset;
-		position.z = player.getPosition().z - zOffset;
-		position.y = player.getPosition().y + yOffset;
+			calculateZoom();
+			calculatePitch();
+			calculateAroundPlayer();
+		if (player != null){
+			float yOffset = distanceFromPlayer * (float) Math.sin(Math.toRadians(rotation.x));
+			float hOffset = distanceFromPlayer * (float) Math.cos(Math.toRadians(rotation.x));
+			
+			float theta = angleAroundPlayer + player.getRotation().y;
+			float xOffset = hOffset * (float) Math.sin(Math.toRadians(theta));
+			float zOffset = hOffset * (float) Math.cos(Math.toRadians(theta));
+			rotation.y = 180 - theta;
+					
+			position.x = player.getPosition().x - xOffset;
+			position.z = player.getPosition().z - zOffset;
+			position.y = player.getPosition().y + yOffset;
+		}
 	}
 	
 	public void setPlayer(Player player){
@@ -132,6 +135,10 @@ public class Camera {
 
 	public void setRotation(Vector3f rotation) {
 		this.rotation = rotation;
+	}
+
+	public Player getPlayer() {
+		return player;
 	}
 
 }

@@ -23,21 +23,21 @@ public class Main {
 		Window.CreateWindow(800, 600, "Game");
 
 		Loader loader = new Loader();
-		Camera cam = new Camera(70, 0.1f, 10000f, new Vector3f(0, 20, 5), new Vector3f(30, 0, 0));
+		Camera cam = new Camera(70, 0.1f, 5000f, new Vector3f(-1000, 300, -1000), new Vector3f(30, 0, 0));
 				
 		TerrainTexturePack pack = new TerrainTexturePack();
 		pack.setBackgroundTexture(loader.loadTexture("res/grass.png"));
 		pack.setrTexture(loader.loadTexture("res/mud.png"));
 		pack.setgTexture(loader.loadTexture("res/dirt.png"));
-		pack.setbTexture(loader.loadTexture("res/dirt.png"));
+		pack.setbTexture(loader.loadTexture("res/path.png"));
 		pack.setBlendMapTexture(loader.loadTexture("res/blendMap.png"));
 		
-		Terrain terrain = new Terrain(-1, -1, loader, pack, "HMap");
+		Terrain terrain = new Terrain(-1, -1, loader, pack, "heightmap");
 			
-		TexturedModel tree_model = loader.loadOBJModel("lowPolyTree");
-		tree_model.setTexture(loader.loadTexture("res/lowPolyTree.png"));
+		TexturedModel tree_model = loader.loadOBJModel("tree");
+		tree_model.setTexture(loader.loadTexture("res/tree.png"));
 		tree_model.setShineDamper(10);
-		tree_model.setReflectivity(0.1f);	
+		tree_model.setReflectivity(0.001f);	
 		
 		TexturedModel bush_model = loader.loadOBJModel("grass");
 		bush_model.setTexture(loader.loadTexture("res/grassTexture.png"));
@@ -45,30 +45,22 @@ public class Main {
 		bush_model.getTexture().setUseFakeLighting(true);
 		
 		List<Entity> entities = new ArrayList<Entity>();
-		Player player = new Player(tree_model, new Vector3f(-400, 100, -400), new Vector3f(0, 0, 0), 0.5f);
-		cam.setPlayer(player);
+		Player player = new Player(tree_model, new Vector3f(-1000, 400, -1000), new Vector3f(0, 0, 0), 20f);
 		entities.add(player);
-		
-		for (int i = 0; i < 200; i++) {
-			float x_pos = -(float) (Math.random() * 780);
-			float z_pos = -(float) (Math.random() * 780) - 10;
-			float y_pos = terrain.getTerrainHeight(x_pos, z_pos);
-			Entity grass = new Entity(tree_model, new Vector3f(x_pos, y_pos, z_pos), new Vector3f(0, 0, 0), 1f);
-			entities.add(grass);
-		}
+
+		cam.setPlayer(player);
 		
 		for (int i = 0; i < 800; i++) {
-			float x_pos = -(float) (Math.random() * 780);
-			float z_pos = -(float) (Math.random() * 780) - 10;
+			float x_pos = -(float) (Math.random() * 1800) - 10;
+			float z_pos = -(float) (Math.random() * 1800) - 10;
 			float y_pos = terrain.getTerrainHeight(x_pos, z_pos);
-			Entity bush = new Entity(bush_model, new Vector3f(x_pos, y_pos, z_pos), new Vector3f(0, 0, 0), (float) Math.random() * 4f + 1f);
+			Entity bush = new Entity(bush_model, new Vector3f(x_pos, y_pos, z_pos), new Vector3f(0, 0, 0), (float) Math.random() * 10f + 1f);
 			entities.add(bush);
 		}
 										
-		Light light = new Light(new Vector3f(200, 200, 100), new Vector3f(1, 1, 1));
+		Light light = new Light(new Vector3f(-2500, 1000, -2500), new Vector3f(1, 1, 1));
 		
 		MasterRenderer renderer = new MasterRenderer(cam);
-		
 		float lastTime = 0;
 		float deltaTime = 0;
 		
@@ -86,8 +78,9 @@ public class Main {
 				renderer.processEntity(entity);
 			
 			renderer.render(light, new Vector3f(0.5f, 0.7f, 0.8f));
-
+			
 			Window.UpdateWindow();
+			
 			lastTime = (float) GLFW.glfwGetTime();
 			deltaTime = lastTime - startTime;
 		}

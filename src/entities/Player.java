@@ -17,7 +17,7 @@ public class Player extends Entity {
 	private float currentSpeed = 0;
 	private float currentTurn = 0;
 	private float upSpeed = 0;
-	private boolean isInAir = false;; 
+	private boolean isInAir = true; 
 	
 	
 	public Player(TexturedModel model, Vector3f position, Vector3f rotation, float scale) {
@@ -90,6 +90,10 @@ public class Player extends Entity {
 
 	public void setRotationSensitivity(float rotation_sensitivity) {
 		this.rotation_sensitivity = rotation_sensitivity;
+	}
+
+	public boolean getInAir() {
+		return isInAir;
 	}
 	
 }
