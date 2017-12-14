@@ -22,8 +22,8 @@ public class Terrain {
 	private TerrainTexturePack textures;
 	private float[][] heights;
 	
-	public static final float SIZE = 2000;
-	public static final float MAX_HEIGHT = 200;
+	public static final float SIZE = 5000;
+	public static final float MAX_HEIGHT = 400;
 	public static final float MAX_PIXEL_COLOR = 256 * 256 * 256;
 
 	public Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack textures, String heightMap) {

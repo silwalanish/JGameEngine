@@ -21,6 +21,7 @@ public class Camera {
 	
 	private float distanceFromPlayer = 200;
 	private float angleAroundPlayer = 180;
+	private float sensitivity = 5;
 
 	public Camera(float fov, float near_plane, float far_plane, Vector3f position, Vector3f rotation) {
 		this.fov = fov;
@@ -35,10 +36,10 @@ public class Camera {
 		this(fov, near_plane, far_plane, new Vector3f(0, 0, 0), new Vector3f(0, 0, 0));
 	}
 	
-	public void move(){
-			calculateZoom();
-			calculatePitch();
-			calculateAroundPlayer();
+	public void Move(float deltaTime){
+			calculateZoom(deltaTime);
+			calculatePitch(deltaTime);
+			calculateAroundPlayer(deltaTime);
 		if (player != null){
 			float yOffset = distanceFromPlayer * (float) Math.sin(Math.toRadians(rotation.x));
 			float hOffset = distanceFromPlayer * (float) Math.cos(Math.toRadians(rotation.x));
@@ -58,30 +59,25 @@ public class Camera {
 		this.player = player;
 	}
 	
-	public void calculateZoom(){
+	public void calculateZoom(float delta){
 		if(Keyboard.getKey(Keys.KEY_Z)){
-			distanceFromPlayer -= 5.0f;
+			distanceFromPlayer -= 50.0f * delta;
 		}else if(Keyboard.getKey(Keys.KEY_X)){
-			distanceFromPlayer += 5.0f;
+			distanceFromPlayer += 50.0f * delta;
 		}
 	}
 	
-	public void calculatePitch(){
-		if(Mouse.getMouseButton(Keys.MOUSE_LEFT) && rotation.x >= 1.0f && rotation.x < 76.0f){
-			float pitch = Mouse.getMouseDY() * 0.1f;
-			rotation.x -= pitch;
-			if(rotation.x < 1.0f){
-				rotation.x = 1.0f;
-			}else if(rotation.x >= 76.0f){
-				rotation.x = 75.0f;
-			}
+	public void calculatePitch(float delta){
+		if(Mouse.getMouseButton(Keys.MOUSE_LEFT)){
+			float pitch = Mouse.getMouseDY() * sensitivity;
+			rotation.x -= pitch * delta;
 		}
 	}
 	
-	public void calculateAroundPlayer(){
+	public void calculateAroundPlayer(float delta){
 		if(Mouse.getMouseButton(Keys.MOUSE_RIGHT)){
-			float angle = Mouse.getMouseDX() * 0.1f;
-			angleAroundPlayer += angle;
+			float angle = Mouse.getMouseDX() * sensitivity;
+			angleAroundPlayer += angle * delta;
 		}
 	}
 

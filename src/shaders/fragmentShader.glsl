@@ -23,7 +23,8 @@ void main()
 	float dotP = dot(unitNormal, unitLight);
 	float brightness = max(dotP, 0.2);
 
-	float specularFact = dot(reflectLightDir, unitNormal);
+	vec3 halfV = normalize(toCamera + toLight);
+	float specularFact = dot(halfV, unitNormal);
 	specularFact = max(specularFact, 0);
 	float dampedFactor = pow(specularFact, shineDamper);
 

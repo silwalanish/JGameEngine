@@ -5,7 +5,6 @@ import org.joml.Vector3f;
 import controller.Keyboard;
 import controller.Keys;
 import models.TexturedModel;
-import terrains.Terrain;
 
 public class Player extends Entity {
 	
@@ -22,7 +21,7 @@ public class Player extends Entity {
 	
 	public Player(TexturedModel model, Vector3f position, Vector3f rotation, float scale) {
 		super(model, position, rotation, scale);
-		this.move_speed = 20;
+		this.move_speed = 50;
 		this.rotation_sensitivity = 90;
 		this.jump_force = 30;
 	}
@@ -35,7 +34,7 @@ public class Player extends Entity {
 		this.jump_force = jump_force;
 	}	
 
-	public void Move(float deltaTime, Terrain terrain){
+	public void Move(float deltaTime){
 		checkInput();
 		increaseRotation(new Vector3f(0, currentTurn * deltaTime, 0));
 		float dist = currentSpeed * deltaTime;
@@ -44,7 +43,7 @@ public class Player extends Entity {
 		increasePosition(new Vector3f(x_dist, 0, z_dist));
 		upSpeed += GRAVITY * deltaTime;
 		increasePosition(new Vector3f(0, upSpeed * deltaTime, 0));
-		float terrainHeight = terrain.getTerrainHeight(position.x, position.z);
+		float terrainHeight = 0; // terrain.getTerrainHeight(position.x, position.z);
 		if(position.y < terrainHeight){
 			upSpeed = 0;
 			position.y = terrainHeight;

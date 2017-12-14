@@ -51,7 +51,7 @@ public class Loader {
 	public Texture loadTexture(String fileName){
 		BufferedImage bi;
 		try {
-			bi = ImageIO.read(new File(fileName));
+			bi = ImageIO.read(new File("res/" + fileName));
 			int width = bi.getWidth();
 			int height = bi.getHeight();
 			

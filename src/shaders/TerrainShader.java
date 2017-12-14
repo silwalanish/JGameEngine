@@ -1,10 +1,9 @@
 package shaders;
 
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
-
 import entities.Camera;
 import entities.Light;
+import renderEngine.Fog;
 
 public class TerrainShader extends ShaderProgram {
 	
@@ -73,10 +72,10 @@ public class TerrainShader extends ShaderProgram {
 		setUniformf(reflectivityLoc, reflectivity);
 	}
 	
-	public void setFog(float density, float gradient, Vector3f color){
-		setUniformf(fogDensityLoc, density);
-		setUniformf(fogGradientLoc, gradient);
-		setUniformVectorf(skyColorLoc, color);
+	public void setFog(Fog fog){
+		setUniformf(fogDensityLoc, fog.getDensity());
+		setUniformf(fogGradientLoc, fog.getGradient());
+		setUniformVectorf(skyColorLoc, fog.getColor());
 	}
 
 	@Override

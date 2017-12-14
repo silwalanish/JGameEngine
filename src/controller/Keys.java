@@ -20,6 +20,10 @@ public class Keys {
 	public static final int KEY_X = GLFW.GLFW_KEY_X;
 	public static final int KEY_C = GLFW.GLFW_KEY_C;
 	
+
+	public static final int KEY_F = GLFW.GLFW_KEY_F;
+	public static final int KEY_G = GLFW.GLFW_KEY_G;
+	
 	
 	public static final int MOUSE_LEFT = GLFW.GLFW_MOUSE_BUTTON_LEFT;
 	public static final int MOUSE_RIGHT = GLFW.GLFW_MOUSE_BUTTON_RIGHT;

@@ -15,8 +15,11 @@ public class TerrainRenderer {
 
 	private TerrainShader shader;
 	
-	public TerrainRenderer(TerrainShader shader, Matrix4f projMat) {
+	public TerrainRenderer(TerrainShader shader){
 		this.shader = shader;
+	}
+		
+	public void init(Matrix4f projMat){
 		shader.start();
 		shader.setProjectionMatrix(projMat);
 		shader.setTexturePack();
@@ -65,5 +68,5 @@ public class TerrainRenderer {
 		GL20.glDisableVertexAttribArray(1);
 		GL20.glDisableVertexAttribArray(0);
 	}
-	
+		
 }

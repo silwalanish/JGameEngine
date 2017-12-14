@@ -17,8 +17,11 @@ public class EntityRenderer {
 	
 	private StaticShader shader;
 
-	public EntityRenderer(StaticShader shader, Matrix4f projMat) {
-		this.shader = shader;		
+	public EntityRenderer(StaticShader shader) {
+		this.shader = shader;
+	}
+		
+	public void init(Matrix4f projMat){
 		shader.start();
 		shader.setProjectionMatrix(projMat);
 		shader.stop();
@@ -74,4 +77,5 @@ public class EntityRenderer {
 		MasterRenderer.enableCulling();
 	}
 
+	
 }

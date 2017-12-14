@@ -8,9 +8,8 @@ import java.util.Map;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
 
-import entities.Camera;
 import entities.Entity;
-import entities.Light;
+import game.Scene;
 import models.TexturedModel;
 import shaders.StaticShader;
 import shaders.TerrainShader;
@@ -22,15 +21,23 @@ public class MasterRenderer {
 	private TerrainShader terrainShader = new TerrainShader();
 	private EntityRenderer renderer;
 	private TerrainRenderer terrainRenderer;
-	private Camera camera;
+	private Scene scene;
 	
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
 	private List<Terrain> terrains = new ArrayList<Terrain>();
 	
-	public MasterRenderer(Camera cam) {
-		camera = cam;
-		renderer = new EntityRenderer(shader, camera.getProjectionMatrix());
-		terrainRenderer = new TerrainRenderer(terrainShader, cam.getProjectionMatrix());
+	public MasterRenderer(){
+		renderer = new EntityRenderer(shader);
+		terrainRenderer = new TerrainRenderer(terrainShader);
+		init();
+	}
+
+	private void initRenderers() {
+		renderer.init(scene.getCamera().getProjectionMatrix());
+		terrainRenderer.init(scene.getCamera().getProjectionMatrix());
+	}
+		
+	public void init(){
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glCullFace(GL11.GL_BACK);
 	}
@@ -44,25 +51,27 @@ public class MasterRenderer {
 		GL11.glDisable(GL11.GL_CULL_FACE);
 	}
 	
-	public void perpare(Vector3f skyColor) {
+	public void perpare(Vector3f skyColor) {		
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		GL11.glClearColor(skyColor.x, skyColor.y, skyColor.z, 1);
 	}
 	
-	public void render(Light light, Vector3f skyColor){
+	public void render(){
+		Vector3f skyColor = scene.getFog().getColor();
 		perpare(skyColor);
+		
 		shader.start();
-		shader.setLight(light);
-		shader.setViewMatrix(camera);
-		shader.setFog(0.000f, 1.5f, skyColor);
+		shader.setLight(scene.getLight());
+		shader.setViewMatrix(scene.getCamera());
+		shader.setFog(scene.getFog());
 		renderer.render(entities);
 		shader.stop();
 		
 		terrainShader.start();
-		terrainShader.setLight(light);
-		terrainShader.setViewMatrix(camera);
-		terrainShader.setFog(0.000f, 1.5f, skyColor);
+		terrainShader.setLight(scene.getLight());
+		terrainShader.setViewMatrix(scene.getCamera());
+		terrainShader.setFog(scene.getFog());
 		terrainRenderer.render(terrains);
 		terrainShader.stop();
 		
@@ -90,4 +99,10 @@ public class MasterRenderer {
 		shader.cleanUp();
 		terrainShader.cleanUp();
 	}
+	
+	public void setScene(Scene scene){
+		this.scene = scene;
+		initRenderers();
+	}
+
 }
