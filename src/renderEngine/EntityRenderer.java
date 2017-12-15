@@ -63,7 +63,7 @@ public class EntityRenderer {
 	}
 	
 	private void prepareInstance(Entity entity){
-		shader.setTransformationMatrix(entity.getTranformationMatrix());		
+		shader.setTransformationMatrix(entity.getTransform().getTranformationMatrix());		
 	}
 	
 	private void unbindModel(TexturedModel model){

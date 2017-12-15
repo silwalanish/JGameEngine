@@ -1,34 +1,40 @@
 package entities;
 
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
+import java.util.ArrayList;
+import java.util.List;
 
+import components.Component;
+import materials.Material;
 import models.TexturedModel;
 
 public class Entity {
 
 	protected TexturedModel model;
-	protected Vector3f position;
-	protected Vector3f rotation;
-	protected float scale;
-
-	public Entity() {
-
-	}
-
-	public Entity(TexturedModel model, Vector3f position, Vector3f rotation, float scale) {
+	protected Transform transform;
+	protected Material material;
+	protected List<Component> components = new ArrayList<Component>();
+	
+	public Entity(TexturedModel model){
 		this.model = model;
-		this.position = position;
-		this.rotation = rotation;
-		this.scale = scale;
+		this.transform = new Transform();
+		this.material = new Material();
 	}
 
-	public void increasePosition(Vector3f dP) {
-		this.position = this.position.add(dP);
+	public Entity(TexturedModel model, Transform transform) {
+		this.model = model;
+		this.transform = transform;
+		this.material = new Material();
 	}
-
-	public void increaseRotation(Vector3f dR) {
-		this.rotation = this.rotation.add(dR);
+	
+	public Entity(TexturedModel model, Transform transform, Material material) {
+		this.model = model;
+		this.transform = transform;
+		this.material = material;
+	}
+	
+	public void AddComponent(Component component){
+		component.setParent(this);
+		components.add(component);
 	}
 
 	public TexturedModel getModel() {
@@ -39,42 +45,26 @@ public class Entity {
 		this.model = model;
 	}
 
-	public Vector3f getPosition() {
-		return position;
+	public Transform getTransform() {
+		return transform;
 	}
 
-	public void setPosition(Vector3f position) {
-		this.position = position;
+	public void setTransform(Transform transform) {
+		this.transform = transform;
 	}
 
-	public Vector3f getRotation() {
-		return rotation;
+	public Material getMaterial() {
+		return material;
 	}
 
-	public void setRotation(Vector3f rotation) {
-		this.rotation = rotation;
+	public void setMaterial(Material material) {
+		this.material = material;
 	}
 
-	public float getScale() {
-		return scale;
-	}
-
-	public void setScale(float scale) {
-		this.scale = scale;
-	}
-
-	public Matrix4f getTranformationMatrix() {
-		Matrix4f transMat = new Matrix4f();
-		transMat.identity();
-		transMat.translation(position);
-
-		transMat.rotate((float) Math.toRadians(rotation.x), new Vector3f(1, 0, 0));
-		transMat.rotate((float) Math.toRadians(rotation.y), new Vector3f(0, 1, 0));
-		transMat.rotate((float) Math.toRadians(rotation.z), new Vector3f(0, 0, 1));
-
-		transMat.scale(scale);
-
-		return transMat;
+	public void update(float deltaTime) {
+		for (Component component: components){
+			component.update(deltaTime);
+		}
 	}
 
 }

@@ -2,9 +2,10 @@ package tester;
 
 import org.joml.Vector3f;
 
+import components.Movement;
 import entities.Entity;
 import entities.Light;
-import entities.Player;
+import entities.Transform;
 import game.Scene;
 import models.TexturedModel;
 import renderEngine.Fog;
@@ -14,7 +15,7 @@ import textures.TerrainTexturePack;
 
 public class MainScene extends Scene {
 
-	private Player player;
+	private Entity player;
 	
 	@Override
 	public void init() {
@@ -38,15 +39,19 @@ public class MainScene extends Scene {
 		sphere.setShineDamper(50);
 		sphere.setReflectivity(0.1f);	
 				
-		player = new Player(sphere, new Vector3f(-1000, 20, -1000), new Vector3f(0, 0, 0), 20f);		
+		player = new Entity(sphere, 
+				new Transform(new Vector3f(-1000, 200, -1000), new Vector3f(0, 0, 0), 20f));
+		player.AddComponent(new Movement());
 		entities.add(player);
-		camera.setPlayer(player);
+		camera.setFollow(player);
 	}
 
 	@Override
 	public void update(float deltaTime) {
-		player.Move(deltaTime);
 		camera.Move(deltaTime);
+		for(Entity entity: entities){
+			entity.update(deltaTime);
+		}
 	}
 	
 	@Override

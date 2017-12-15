@@ -6,15 +6,15 @@ public class Timer {
 
 	private static float lastTime = 0;
 	private static float deltaTime = 0;
-	
-	public static void CalculateDelta(){
+
+	public static void CalculateDelta() {
 		float currentTime = (float) GLFW.glfwGetTime();
-		deltaTime = lastTime - currentTime;
+		deltaTime = currentTime - lastTime;
 		lastTime = currentTime;
 	}
-	
-	public static float GetDelta(){
+
+	public static float GetDelta() {
 		return deltaTime;
 	}
-	
+
 }

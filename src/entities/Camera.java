@@ -8,76 +8,77 @@ import controller.Keys;
 import controller.Mouse;
 import renderEngine.Window;
 
-public class Camera {
+public class Camera extends Entity {
 
 	private float fov = 70;
 	private float near_plane = 0.1f;
 	private float far_plane = 1000f;
 	private Matrix4f projMat;
 
-	private Vector3f position;
-	private Vector3f rotation;
-	private Player player;
+	private Entity entityToFollow;
 	
-	private float distanceFromPlayer = 200;
-	private float angleAroundPlayer = 180;
-	private float sensitivity = 5;
+	private float distanceFromEntity = 200;
+	private float angleAroundEntity = 180;
+	private float sensitivity = 5;	
 
-	public Camera(float fov, float near_plane, float far_plane, Vector3f position, Vector3f rotation) {
+	public Camera(float fov, float near_plane, float far_plane, Transform transform) {
+		super(null, transform);
 		this.fov = fov;
 		this.near_plane = near_plane;
 		this.far_plane = far_plane;
-		this.position = position;
-		this.rotation = rotation;
 		createProjectionMatrix();
 	}
 
 	public Camera(float fov, float near_plane, float far_plane) {
-		this(fov, near_plane, far_plane, new Vector3f(0, 0, 0), new Vector3f(0, 0, 0));
+		this(fov, near_plane, far_plane, new Transform());
 	}
 	
 	public void Move(float deltaTime){
 			calculateZoom(deltaTime);
 			calculatePitch(deltaTime);
 			calculateAroundPlayer(deltaTime);
-		if (player != null){
-			float yOffset = distanceFromPlayer * (float) Math.sin(Math.toRadians(rotation.x));
-			float hOffset = distanceFromPlayer * (float) Math.cos(Math.toRadians(rotation.x));
-			
-			float theta = angleAroundPlayer + player.getRotation().y;
+		if (entityToFollow != null){
+			float yOffset = distanceFromEntity * (float) Math.sin(Math.toRadians(transform.getRotation().x));
+			float hOffset = distanceFromEntity * (float) Math.cos(Math.toRadians(transform.getRotation().x));
+						
+			float theta = angleAroundEntity + entityToFollow.getTransform().getRotation().y;
 			float xOffset = hOffset * (float) Math.sin(Math.toRadians(theta));
 			float zOffset = hOffset * (float) Math.cos(Math.toRadians(theta));
-			rotation.y = 180 - theta;
+			transform.getRotation().y = 180 - theta;
 					
-			position.x = player.getPosition().x - xOffset;
-			position.z = player.getPosition().z - zOffset;
-			position.y = player.getPosition().y + yOffset;
+			transform.getPosition().x = entityToFollow.getTransform().getPosition().x - xOffset;
+			transform.getPosition().z = entityToFollow.getTransform().getPosition().z - zOffset;
+			transform.getPosition().y = entityToFollow.getTransform().getPosition().y + yOffset;
 		}
 	}
 	
-	public void setPlayer(Player player){
-		this.player = player;
+	public void setFollow(Entity entity){
+		this.entityToFollow = entity;
+	}
+
+	public Entity getFollowing() {
+		return entityToFollow;
 	}
 	
 	public void calculateZoom(float delta){
 		if(Keyboard.getKey(Keys.KEY_Z)){
-			distanceFromPlayer -= 50.0f * delta;
+			distanceFromEntity -= 50.0f * delta;
 		}else if(Keyboard.getKey(Keys.KEY_X)){
-			distanceFromPlayer += 50.0f * delta;
+			distanceFromEntity += 50.0f * delta;
 		}
 	}
 	
 	public void calculatePitch(float delta){
 		if(Mouse.getMouseButton(Keys.MOUSE_LEFT)){
 			float pitch = Mouse.getMouseDY() * sensitivity;
-			rotation.x -= pitch * delta;
+			transform.getRotation().x -= pitch * delta;
 		}
 	}
 	
 	public void calculateAroundPlayer(float delta){
 		if(Mouse.getMouseButton(Keys.MOUSE_RIGHT)){
 			float angle = Mouse.getMouseDX() * sensitivity;
-			angleAroundPlayer += angle * delta;
+			angleAroundEntity += angle * delta;
 		}
 	}
 
@@ -85,11 +86,11 @@ public class Camera {
 		Matrix4f viewMatrix = new Matrix4f();
 		viewMatrix.identity();
 
-		viewMatrix.rotate((float) Math.toRadians(rotation.x), new Vector3f(1, 0, 0));
-		viewMatrix.rotate((float) Math.toRadians(rotation.y), new Vector3f(0, 1, 0));
-		viewMatrix.rotate((float) Math.toRadians(rotation.z), new Vector3f(0, 0, 1));
+		viewMatrix.rotate((float) Math.toRadians(transform.getRotation().x), new Vector3f(1, 0, 0));
+		viewMatrix.rotate((float) Math.toRadians(transform.getRotation().y), new Vector3f(0, 1, 0));
+		viewMatrix.rotate((float) Math.toRadians(transform.getRotation().z), new Vector3f(0, 0, 1));
 
-		Vector3f negativeCameraPos = new Vector3f(-position.x, -position.y, -position.z);
+		Vector3f negativeCameraPos = new Vector3f(-transform.getPosition().x, -transform.getPosition().y, -transform.getPosition().z);
 		viewMatrix.translate(negativeCameraPos);
 
 		return viewMatrix;
@@ -116,25 +117,5 @@ public class Camera {
 	public Matrix4f getProjectionMatrix() {
 		return projMat;
 	}
-
-	public Vector3f getPosition() {
-		return position;
-	}
-
-	public void setPosition(Vector3f position) {
-		this.position = position;
-	}
-
-	public Vector3f getRotation() {
-		return rotation;
-	}
-
-	public void setRotation(Vector3f rotation) {
-		this.rotation = rotation;
-	}
-
-	public Player getPlayer() {
-		return player;
-	}
-
+	
 }

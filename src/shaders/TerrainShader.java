@@ -59,7 +59,7 @@ public class TerrainShader extends ShaderProgram {
 	
 	public void setViewMatrix(Camera cam){
 		setUniformMat(viewMatLoc, cam.getViewMatrix());
-		setUniformVectorf(cameraPosLoc, cam.getPosition());
+		setUniformVectorf(cameraPosLoc, cam.getTransform().getPosition());
 	}
 	
 	public void setLight(Light light){
